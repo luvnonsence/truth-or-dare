@@ -1,0 +1,37 @@
+/* src/index.css */
+@import "tailwindcss";
+
+@theme {
+  --color-glass-bg: rgba(255, 255, 255, 0.08);
+  --color-glass-border: rgba(255, 255, 255, 0.18);
+  --color-glass-highlight: rgba(255, 255, 255, 0.25);
+}
+
+@layer utilities {
+  .liquid-glass {
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(18px) saturate(1.6);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 20px;
+    box-shadow: 
+      inset 0 1px 0 var(--color-glass-highlight), /* верхний блик */
+      inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+      0 8px 32px rgba(0, 0, 0, 0.35); /* глубина */
+  }
+
+  /* Уважение к настройкам пользователя (a11y) */
+  @media (prefers-reduced-transparency: reduce) {
+    .liquid-glass {
+      background: #1a1f38;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+}
+
+/* Базовый фон приложения (глубина под стеклом) */
+body {
+  @apply min-h-screen text-white antialiased;
+  background: radial-gradient(circle at 50% -20%, #3b1d5c, #0f172a 80%);
+}
