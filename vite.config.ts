@@ -15,8 +15,8 @@ export default defineConfig({
         name: 'Правда или Действие',
         short_name: 'Правда',
         description: 'Игра для вечеринок. Один телефон. Много откровений.',
-        theme_color: '#0f172a',
-        background_color: '#0f172a',
+        theme_color: '#3b1d5c',       // верх = начало градиента
+        background_color: '#0f172a',  // низ = конец градиента
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',

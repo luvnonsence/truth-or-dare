@@ -179,7 +179,7 @@ export default function GameScreen() {
           className="flex flex-col gap-4 flex-1 will-change-transform"
         >
           {/* баннер игрока */}
-          <div className="glass-card-solid px-4 py-3 flex items-center gap-3">
+          <div className="liquid-glass px-4 py-3 flex items-center gap-3">
             <div className={`w-11 h-11 rounded-full ${getAvatarClass(currentPlayer.colorIndex)} flex items-center justify-center font-bold text-lg shrink-0`}>
               {(currentPlayer.name[0] ?? '?').toUpperCase()}
             </div>

@@ -292,7 +292,7 @@ export default function SetupScreen() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ delay: i * 0.03, duration: 0.2 }}
                 onClick={() => startEdit(p)}
-                className={`glass-card-solid px-3 py-2.5 flex items-center gap-3 cursor-pointer transition ${
+                className={`liquid-glass px-3 py-2.5 flex items-center gap-3 cursor-pointer transition ${
                   editingId === p.id ? 'ring-2 ring-amber-400/60' : 'hover:bg-white/5'
                 }`}
               >
