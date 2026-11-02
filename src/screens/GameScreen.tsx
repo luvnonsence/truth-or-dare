@@ -6,7 +6,7 @@ import { useConfirm } from '../lib/confirm'
 import { cards } from '../data/cards'
 import { haptic } from '../lib/haptics'
 import { playSound } from '../lib/sound'
-import { getAvatarGradient } from '../lib/colors'
+import { getAvatarClass } from '../lib/colors'
 import type { Card, Intimacy, GameLevel, Player } from '../types'
 
 const canInteract = (a: Player, b: Player) =>
@@ -63,7 +63,6 @@ export default function GameScreen() {
       ? eligible
       : cards.filter(c => baseFilter(c) && !c.requiresPartner)
 
-    // Все карты уровня использованы — сбрасываем usedCards, но recentCards остаются
     if (pool.length === 0) {
       clearUsedCards()
       const refilter = (c: Card) =>
@@ -73,7 +72,6 @@ export default function GameScreen() {
         !recentSet.has(c.id)
       pool = cards.filter(c => refilter(c) && (!c.requiresPartner || hasCompatiblePartner))
 
-      // если и с recentCards пусто — сбрасываем recent, берём всё
       if (pool.length === 0) {
         pool = cards.filter(c =>
           c.type === chosenType &&
@@ -142,9 +140,9 @@ export default function GameScreen() {
   const cardKey = `${currentPlayer.id}-${currentCard?.id ?? 'choice'}`
 
   return (
-    <div className="flex flex-col gap-4 pt-10 px-4 pb-4 flex-1">
+    <div className="flex flex-col gap-4 pt-safe-top px-4 pb-4 flex-1">
       {/* верхняя панель */}
-      <div className="flex items-center justify-between px-1 gap-2">
+      <div className="flex items-center justify-between px-1 gap-2 mt-4">
         <button
           onClick={handleExit}
           className="text-white/50 hover:text-white text-sm transition shrink-0"
@@ -183,7 +181,7 @@ export default function GameScreen() {
         >
           {/* баннер игрока */}
           <div className="liquid-glass px-4 py-3 flex items-center gap-3">
-            <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${getAvatarGradient(currentPlayer.colorIndex)} flex items-center justify-center font-bold text-lg shrink-0`}>
+            <div className={`w-11 h-11 rounded-full ${getAvatarClass(currentPlayer.colorIndex)} flex items-center justify-center font-bold text-lg shrink-0`}>
               {(currentPlayer.name[0] ?? '?').toUpperCase()}
             </div>
             <div className="min-w-0">

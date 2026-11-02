@@ -5,21 +5,21 @@ import { useGameStore } from '../store'
 import { haptic } from '../lib/haptics'
 import { playSound } from '../lib/sound'
 import { uid } from '../lib/uid'
-import { getAvatarGradient } from '../lib/colors'
+import { getAvatarClass } from '../lib/colors'
 import { randomAnimalName } from '../lib/animalNames'
 import { useConfirm } from '../lib/confirm'
 import type { Gender, GameLevel, Player } from '../types'
 
-const GENDERS: { value: Gender; label: string; emoji: string; gradient: string }[] = [
-  { value: 'male', label: 'Парень', emoji: '♂', gradient: 'from-sky-400 to-blue-500' },
-  { value: 'female', label: 'Девушка', emoji: '♀', gradient: 'from-pink-400 to-rose-500' },
+const GENDERS: { value: Gender; label: string; gradient: string }[] = [
+  { value: 'male', label: 'Парень', gradient: 'from-sky-400 to-blue-500' },
+  { value: 'female', label: 'Девушка', gradient: 'from-pink-400 to-red-400' },
 ]
 
 type WillingnessKey = 'male' | 'female' | 'all'
 
 const WILLING_OPTIONS: { value: WillingnessKey; label: string; gradient: string }[] = [
   { value: 'male', label: 'Парень', gradient: 'from-sky-400 to-blue-500' },
-  { value: 'female', label: 'Девушка', gradient: 'from-pink-400 to-rose-500' },
+  { value: 'female', label: 'Девушка', gradient: 'from-pink-400 to-red-400' },
   { value: 'all', label: 'Все', gradient: 'from-purple-400 to-fuchsia-500' },
 ]
 
@@ -163,9 +163,9 @@ export default function SetupScreen() {
   const missing = 2 - players.length
 
   return (
-    <div className="flex flex-col gap-5 pt-10 px-4 pb-8">
+    <div className="flex flex-col gap-5 pt-safe-top px-4 pb-8">
       {/* верхняя панель */}
-      <div className="flex items-center justify-between px-1">
+      <div className="flex items-center justify-between px-1 mt-4">
         <button
           onClick={() => { haptic(8); setPhase('menu') }}
           className="text-white/50 hover:text-white text-sm transition"
@@ -225,16 +225,13 @@ export default function SetupScreen() {
               <button
                 key={g.value}
                 onClick={() => { haptic(5); setGender(g.value) }}
-                className={`rounded-xl px-3 py-2.5 text-sm font-medium transition inline-flex items-center justify-center gap-1.5 ${
+                className={`rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                   gender === g.value
                     ? `bg-gradient-to-br ${g.gradient} text-white shadow-lg`
                     : 'bg-white/5 text-white/60 hover:bg-white/10'
                 }`}
               >
-                <span className="inline-flex items-center justify-center leading-none">
-                  {g.emoji}
-                </span>
-                <span>{g.label}</span>
+                {g.label}
               </button>
             ))}
           </div>
@@ -299,7 +296,7 @@ export default function SetupScreen() {
                   editingId === p.id ? 'ring-2 ring-amber-400/60' : 'hover:bg-white/5'
                 }`}
               >
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${getAvatarGradient(p.colorIndex)} flex items-center justify-center font-bold shrink-0`}>
+                <div className={`w-10 h-10 rounded-full ${getAvatarClass(p.colorIndex)} flex items-center justify-center font-bold shrink-0`}>
                   {(p.name[0] ?? '?').toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
