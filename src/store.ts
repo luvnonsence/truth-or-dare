@@ -9,6 +9,7 @@ interface GameState {
   currentPlayerIndex: number
   intimacy: GameLevel
   usedCards: string[]
+  recentCards: string[]
   setPhase: (phase: GamePhase) => void
   addPlayer: (player: Player) => void
   updatePlayer: (id: string, patch: Partial<Omit<Player, 'id' | 'colorIndex'>>) => void
@@ -21,6 +22,8 @@ interface GameState {
   resetGame: () => void
 }
 
+const RECENT_LIMIT = 30
+
 export const useGameStore = create<GameState>()(
   persist(
     (set) => ({
@@ -29,6 +32,7 @@ export const useGameStore = create<GameState>()(
       currentPlayerIndex: 0,
       intimacy: 1,
       usedCards: [],
+      recentCards: [],
 
       setPhase: (phase) => set({ phase }),
       addPlayer: (player) => set((s) => ({ players: [...s.players, player] })),
@@ -46,6 +50,7 @@ export const useGameStore = create<GameState>()(
       })),
       markCardUsed: (cardId) => set((s) => ({
         usedCards: s.usedCards.includes(cardId) ? s.usedCards : [...s.usedCards, cardId],
+        recentCards: [...s.recentCards.filter(id => id !== cardId), cardId].slice(-RECENT_LIMIT),
       })),
       clearUsedCards: () => set({ usedCards: [] }),
       resetGame: () => set({
@@ -53,7 +58,6 @@ export const useGameStore = create<GameState>()(
         players: [],
         currentPlayerIndex: 0,
         intimacy: 1,
-        usedCards: [],
       }),
     }),
     {

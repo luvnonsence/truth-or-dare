@@ -163,7 +163,7 @@ export default function SetupScreen() {
   const missing = 2 - players.length
 
   return (
-    <div className="flex flex-col gap-5 pt-2 pb-8">
+    <div className="flex flex-col gap-5 pt-10 px-4 pb-8">
       {/* верхняя панель */}
       <div className="flex items-center justify-between px-1">
         <button
@@ -191,7 +191,7 @@ export default function SetupScreen() {
 
       {/* форма добавления / редактирования */}
       <motion.div
-        className="liquid-glass p-4 flex flex-col gap-3"
+        className="liquid-glass p-4 flex flex-col gap-3 will-change-transform"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.4 }}
@@ -225,14 +225,16 @@ export default function SetupScreen() {
               <button
                 key={g.value}
                 onClick={() => { haptic(5); setGender(g.value) }}
-                className={`rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                className={`rounded-xl px-3 py-2.5 text-sm font-medium transition inline-flex items-center justify-center gap-1.5 ${
                   gender === g.value
                     ? `bg-gradient-to-br ${g.gradient} text-white shadow-lg`
                     : 'bg-white/5 text-white/60 hover:bg-white/10'
                 }`}
               >
-                <span className="mr-1 opacity-80">{g.emoji}</span>
-                {g.label}
+                <span className="inline-flex items-center justify-center leading-none">
+                  {g.emoji}
+                </span>
+                <span>{g.label}</span>
               </button>
             ))}
           </div>
@@ -293,7 +295,7 @@ export default function SetupScreen() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ delay: i * 0.03, duration: 0.2 }}
                 onClick={() => startEdit(p)}
-                className={`liquid-glass px-3 py-2.5 flex items-center gap-3 cursor-pointer transition ${
+                className={`liquid-glass px-3 py-2.5 flex items-center gap-3 cursor-pointer transition will-change-transform ${
                   editingId === p.id ? 'ring-2 ring-amber-400/60' : 'hover:bg-white/5'
                 }`}
               >
@@ -362,7 +364,6 @@ export default function SetupScreen() {
           ))}
         </div>
 
-        {/* описание выбранного уровня */}
         <AnimatePresence mode="wait">
           <motion.div
             key={intimacy}

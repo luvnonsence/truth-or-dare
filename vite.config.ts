@@ -13,9 +13,9 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
         name: 'Правда или Действие',
-        short_name: 'ToD',
+        short_name: 'Правда',
         description: 'Игра для вечеринок. Один телефон. Много откровений.',
-        theme_color: '#3b1d5c',
+        theme_color: '#0a0414',
         background_color: '#0a0414',
         display: 'standalone',
         orientation: 'portrait',

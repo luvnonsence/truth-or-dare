@@ -26,6 +26,7 @@ export default function GameScreen() {
   const nextPlayer = useGameStore(s => s.nextPlayer)
   const resetGame = useGameStore(s => s.resetGame)
   const usedCards = useGameStore(s => s.usedCards)
+  const recentCards = useGameStore(s => s.recentCards)
   const markCardUsed = useGameStore(s => s.markCardUsed)
   const clearUsedCards = useGameStore(s => s.clearUsedCards)
   const ask = useConfirm(s => s.ask)
@@ -45,11 +46,14 @@ export default function GameScreen() {
   const drawCard = (type?: 'truth' | 'dare') => {
     const chosenType = type ?? (Math.random() < 0.5 ? 'truth' : 'dare')
 
+    const recentSet = new Set(recentCards)
+
     const baseFilter = (c: Card) =>
       c.type === chosenType &&
       isCardInLevel(c.intimacy, intimacy) &&
       (!c.targetGender || c.targetGender.includes(currentPlayer.gender)) &&
-      !usedCards.includes(c.id)
+      !usedCards.includes(c.id) &&
+      !recentSet.has(c.id)
 
     const eligible = cards.filter(
       c => baseFilter(c) && (!c.requiresPartner || hasCompatiblePartner)
@@ -59,13 +63,25 @@ export default function GameScreen() {
       ? eligible
       : cards.filter(c => baseFilter(c) && !c.requiresPartner)
 
+    // Все карты уровня использованы — сбрасываем usedCards, но recentCards остаются
     if (pool.length === 0) {
       clearUsedCards()
       const refilter = (c: Card) =>
         c.type === chosenType &&
         isCardInLevel(c.intimacy, intimacy) &&
-        (!c.targetGender || c.targetGender.includes(currentPlayer.gender))
+        (!c.targetGender || c.targetGender.includes(currentPlayer.gender)) &&
+        !recentSet.has(c.id)
       pool = cards.filter(c => refilter(c) && (!c.requiresPartner || hasCompatiblePartner))
+
+      // если и с recentCards пусто — сбрасываем recent, берём всё
+      if (pool.length === 0) {
+        pool = cards.filter(c =>
+          c.type === chosenType &&
+          isCardInLevel(c.intimacy, intimacy) &&
+          (!c.targetGender || c.targetGender.includes(currentPlayer.gender)) &&
+          (!c.requiresPartner || hasCompatiblePartner)
+        )
+      }
       if (pool.length === 0) return
     }
 
@@ -126,7 +142,7 @@ export default function GameScreen() {
   const cardKey = `${currentPlayer.id}-${currentCard?.id ?? 'choice'}`
 
   return (
-    <div className="flex flex-col gap-4 min-h-[80svh]">
+    <div className="flex flex-col gap-4 pt-10 px-4 pb-4 flex-1">
       {/* верхняя панель */}
       <div className="flex items-center justify-between px-1 gap-2">
         <button
@@ -163,7 +179,7 @@ export default function GameScreen() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="flex flex-col gap-4 flex-1"
+          className="flex flex-col gap-4 flex-1 will-change-transform"
         >
           {/* баннер игрока */}
           <div className="liquid-glass px-4 py-3 flex items-center gap-3">
@@ -184,7 +200,7 @@ export default function GameScreen() {
                 animate={{ rotateY: 0, opacity: 1 }}
                 transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                 style={{ transformStyle: 'preserve-3d' }}
-                className="liquid-glass p-8 text-center flex flex-col gap-6 relative overflow-hidden"
+                className="liquid-glass p-8 text-center flex flex-col gap-6 relative overflow-hidden will-change-transform"
               >
                 <div
                   className={`absolute inset-0 pointer-events-none ${

@@ -29,7 +29,7 @@ export default function MenuScreen() {
   const setPhase = useGameStore(s => s.setPhase)
 
   return (
-    <div className="flex flex-col gap-6 pt-4">
+    <div className="flex flex-col gap-6 pt-12 px-4 pb-6 flex-1 justify-center">
       {/* верхняя мета-строка */}
       <motion.div
         className="flex justify-between items-center px-1 text-xs"
@@ -43,7 +43,7 @@ export default function MenuScreen() {
 
       {/* заголовок */}
       <motion.div
-        className="text-center flex flex-col gap-3 py-8"
+        className="text-center flex flex-col gap-3 py-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}

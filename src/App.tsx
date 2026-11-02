@@ -28,8 +28,8 @@ export default function App() {
     <>
       <Background />
 
-      <div className="min-h-screen flex items-start justify-center p-4 pt-8">
-        <div className="w-full max-w-md">
+      <div className="min-h-full flex justify-center">
+        <div className="w-full max-w-md flex flex-col">
           <AnimatePresence mode="wait">
             <motion.div
               key={phase}
@@ -37,6 +37,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="will-change-transform flex-1 flex flex-col"
             >
               {phase === 'menu' && <MenuScreen />}
               {phase === 'setup' && <SetupScreen />}
