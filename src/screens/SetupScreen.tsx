@@ -163,9 +163,9 @@ export default function SetupScreen() {
   const missing = 2 - players.length
 
   return (
-    <div className="flex flex-col gap-5 pt-safe-top px-4 pb-8">
+    <div className="flex flex-col gap-5 pt-4 px-4 pb-8 flex-1">
       {/* верхняя панель */}
-      <div className="flex items-center justify-between px-1 mt-4">
+      <div className="flex items-center justify-between px-1">
         <button
           onClick={() => { haptic(8); setPhase('menu') }}
           className="text-white/50 hover:text-white text-sm transition"
@@ -191,7 +191,7 @@ export default function SetupScreen() {
 
       {/* форма добавления / редактирования */}
       <motion.div
-        className="liquid-glass p-4 flex flex-col gap-3 will-change-transform"
+        className="liquid-glass p-4 flex flex-col gap-3"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.4 }}
@@ -292,7 +292,7 @@ export default function SetupScreen() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ delay: i * 0.03, duration: 0.2 }}
                 onClick={() => startEdit(p)}
-                className={`liquid-glass px-3 py-2.5 flex items-center gap-3 cursor-pointer transition will-change-transform ${
+                className={`glass-card-solid px-3 py-2.5 flex items-center gap-3 cursor-pointer transition ${
                   editingId === p.id ? 'ring-2 ring-amber-400/60' : 'hover:bg-white/5'
                 }`}
               >

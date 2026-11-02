@@ -1,7 +1,6 @@
 /* src/index.css */
 @import "tailwindcss";
 
-/* Safelist: гарантируем, что Tailwind включит динамические классы */
 @source inline("bg-gradient-to-br from-sky-400 to-blue-500 from-pink-400 to-red-400 from-purple-400 to-fuchsia-500 from-emerald-400/30 from-amber-400/30 from-rose-500/30 from-fuchsia-500/30");
 
 @theme {
@@ -13,31 +12,37 @@
 @layer base {
   html {
     height: 100%;
-    background: radial-gradient(circle at 50% -20%, #3b1d5c, #0f172a 80%);
-    background-color: #0f172a; /* fallback = низ градиента, не чёрный */
-  }
-
-  html,
-  body {
     margin: 0;
-    height: 100%;
-    overscroll-behavior: none;
+    padding: 0;
     overflow: hidden;
+    background-color: #0f172a;
+    background-image: radial-gradient(circle at 50% -20%, #3b1d5c, #0f172a 80%);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-attachment: fixed;
   }
 
   body {
-    position: fixed;
-    inset: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     overflow: hidden;
-    background: radial-gradient(circle at 50% -20%, #3b1d5c, #0f172a 80%);
+    background: transparent;
     @apply text-white antialiased;
   }
 
   #root {
     height: 100%;
-    background: transparent;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
   }
 }
 
@@ -54,6 +59,15 @@
       0 8px 32px rgba(0, 0, 0, 0.35);
   }
 
+  /* Плотная карточка без backdrop-filter — для списков и баннеров,
+     чтобы не ломалось на iOS при анимациях перестановки. */
+  .glass-card-solid {
+    background: rgba(30, 30, 45, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
   .will-change-transform {
     will-change: transform, opacity;
     backface-visibility: hidden;
@@ -61,12 +75,6 @@
     transform: translate3d(0, 0, 0);
   }
 
-  /* Учитывает safe-area-top (островок на iPhone) */
-  .pt-safe-top {
-    padding-top: max(2rem, calc(env(safe-area-inset-top, 0px) + 1rem));
-  }
-
-  /* Явные градиенты аватаров — Tailwind гарантированно их включит */
   .avatar-grad-0 { @apply bg-gradient-to-br from-fuchsia-400 to-rose-400; }
   .avatar-grad-1 { @apply bg-gradient-to-br from-sky-400 to-blue-500; }
   .avatar-grad-2 { @apply bg-gradient-to-br from-emerald-400 to-teal-500; }
@@ -85,9 +93,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;

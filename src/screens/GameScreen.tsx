@@ -45,7 +45,6 @@ export default function GameScreen() {
 
   const drawCard = (type?: 'truth' | 'dare') => {
     const chosenType = type ?? (Math.random() < 0.5 ? 'truth' : 'dare')
-
     const recentSet = new Set(recentCards)
 
     const baseFilter = (c: Card) =>
@@ -140,9 +139,9 @@ export default function GameScreen() {
   const cardKey = `${currentPlayer.id}-${currentCard?.id ?? 'choice'}`
 
   return (
-    <div className="flex flex-col gap-4 pt-safe-top px-4 pb-4 flex-1">
+    <div className="flex flex-col gap-4 pt-4 px-4 pb-4 flex-1">
       {/* верхняя панель */}
-      <div className="flex items-center justify-between px-1 gap-2 mt-4">
+      <div className="flex items-center justify-between px-1 gap-2">
         <button
           onClick={handleExit}
           className="text-white/50 hover:text-white text-sm transition shrink-0"
@@ -180,7 +179,7 @@ export default function GameScreen() {
           className="flex flex-col gap-4 flex-1 will-change-transform"
         >
           {/* баннер игрока */}
-          <div className="liquid-glass px-4 py-3 flex items-center gap-3">
+          <div className="glass-card-solid px-4 py-3 flex items-center gap-3">
             <div className={`w-11 h-11 rounded-full ${getAvatarClass(currentPlayer.colorIndex)} flex items-center justify-center font-bold text-lg shrink-0`}>
               {(currentPlayer.name[0] ?? '?').toUpperCase()}
             </div>
