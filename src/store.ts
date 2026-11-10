@@ -19,10 +19,11 @@ interface GameState {
   nextPlayer: () => void
   markCardUsed: (cardId: string) => void
   clearUsedCards: () => void
+  resetHistory: () => void
   resetGame: () => void
 }
 
-const RECENT_LIMIT = 30
+const RECENT_LIMIT = 350
 
 export const useGameStore = create<GameState>()(
   persist(
@@ -53,17 +54,20 @@ export const useGameStore = create<GameState>()(
         recentCards: [...s.recentCards.filter(id => id !== cardId), cardId].slice(-RECENT_LIMIT),
       })),
       clearUsedCards: () => set({ usedCards: [] }),
+      resetHistory: () => set({ usedCards: [], recentCards: [] }),
       resetGame: () => set({
         phase: 'menu',
         players: [],
         currentPlayerIndex: 0,
         intimacy: 1,
+        usedCards: [],
+        recentCards: [],
       }),
     }),
     {
       name: 'truth-or-dare-storage',
       storage: createJSONStorage(() => localStorage),
-      version: 2,
+      version: 3, // bump — сбросит старый localStorage с накопленными usedCards
     }
   )
 )

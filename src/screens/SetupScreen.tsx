@@ -84,6 +84,7 @@ export default function SetupScreen() {
   const intimacy = useGameStore(s => s.intimacy)
   const setIntimacy = useGameStore(s => s.setIntimacy)
   const setPhase = useGameStore(s => s.setPhase)
+  const resetHistory = useGameStore(s => s.resetHistory)
   const ask = useConfirm(s => s.ask)
 
   const [name, setName] = useState('')
@@ -157,6 +158,14 @@ export default function SetupScreen() {
       hideCancel: true,
       onConfirm: () => {},
     })
+  }
+
+  const handleStart = () => {
+    if (players.length < 2) return
+    haptic(15)
+    playSound('success')
+    resetHistory() // чистый лист: ни одна карта из прошлых партий не повторится
+    setPhase('playing')
   }
 
   const canStart = players.length >= 2
@@ -377,7 +386,7 @@ export default function SetupScreen() {
 
       {/* CTA */}
       <motion.button
-        onClick={() => { if (canStart) { haptic(15); playSound('success'); setPhase('playing') } }}
+        onClick={handleStart}
         disabled={!canStart}
         className="liquid-glass px-6 py-5 text-lg font-bold hover:scale-[1.02] active:scale-95 transition shadow-[0_0_60px_-12px_rgba(217,70,239,0.5)] disabled:opacity-40 disabled:shadow-none"
         whileTap={canStart ? { scale: 0.97 } : undefined}

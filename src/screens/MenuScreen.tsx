@@ -38,7 +38,7 @@ export default function MenuScreen() {
         transition={{ duration: 0.5 }}
       >
         <span className="liquid-glass px-3 py-1 text-white/70 font-medium">18+</span>
-        <span className="text-white/30">v1.0</span>
+        <span className="text-white/30">v1.1</span>
       </motion.div>
 
       {/* заголовок */}
