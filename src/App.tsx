@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useState, useEffect } from 'react'
+import { lazy, Suspense, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useGameStore } from './store'
 import { isOnboardingDone } from './lib/onboarding'
@@ -7,9 +7,9 @@ import Background from './components/Background'
 import ConfirmDialog from './components/ConfirmDialog'
 import SplashScreen from './components/SplashScreen'
 import Onboarding from './components/Onboarding'
-import MenuScreen from './screens/MenuScreen'
-import SetupScreen from './screens/SetupScreen'
-import GameScreen from './screens/GameScreen'
+const MenuScreen = lazy(() => import('./screens/MenuScreen'))
+const SetupScreen = lazy(() => import('./screens/SetupScreen'))
+const GameScreen = lazy(() => import('./screens/GameScreen'))
 
 export default function App() {
   const phase = useGameStore(s => s.phase)
@@ -39,9 +39,21 @@ export default function App() {
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="will-change-transform flex-1 flex flex-col"
             >
-              {phase === 'menu' && <MenuScreen />}
-              {phase === 'setup' && <SetupScreen />}
-              {phase === 'playing' && <GameScreen />}
+              <Suspense
+                fallback={
+                  <div
+                    className="flex flex-1 items-center justify-center text-sm text-white/60"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    Загружаем игру…
+                  </div>
+                }
+              >
+                {phase === 'menu' && <MenuScreen />}
+                {phase === 'setup' && <SetupScreen />}
+                {phase === 'playing' && <GameScreen />}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </div>

@@ -85,6 +85,7 @@ export default function SetupScreen() {
   const setIntimacy = useGameStore(s => s.setIntimacy)
   const setPhase = useGameStore(s => s.setPhase)
   const resetHistory = useGameStore(s => s.resetHistory)
+  const setCurrentCard = useGameStore(s => s.setCurrentCard)
   const ask = useConfirm(s => s.ask)
 
   const [name, setName] = useState('')
@@ -164,7 +165,8 @@ export default function SetupScreen() {
     if (players.length < 2) return
     haptic(15)
     playSound('success')
-    resetHistory() // чистый лист: ни одна карта из прошлых партий не повторится
+    resetHistory() // чистый лист для новой партии
+    setCurrentCard(null)
     setPhase('playing')
   }
 
@@ -172,12 +174,12 @@ export default function SetupScreen() {
   const missing = 2 - players.length
 
   return (
-    <div className="flex flex-col gap-5 pt-4 px-4 pb-8 flex-1">
+    <div className="flex flex-col gap-5 pt-[max(1rem,env(safe-area-inset-top))] px-4 pb-[max(2rem,env(safe-area-inset-bottom))] flex-1">
       {/* верхняя панель */}
       <div className="flex items-center justify-between px-1">
         <button
           onClick={() => { haptic(8); setPhase('menu') }}
-          className="text-white/50 hover:text-white text-sm transition"
+          className="focus-ring tap-target inline-flex items-center text-white/60 hover:text-white text-sm transition"
         >
           ← Назад
         </button>
@@ -217,24 +219,30 @@ export default function SetupScreen() {
           </div>
         )}
 
+        <label htmlFor="player-name" className="sr-only">Имя игрока</label>
         <input
+          id="player-name"
+          name="playerName"
+          autoComplete="off"
+          aria-label="Имя игрока"
           value={name}
           onChange={e => setName(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSave()}
           placeholder="Имя (можно оставить пустым — дадим зверушку)"
           maxLength={20}
           disabled={isFull && !isEditing}
-          className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 outline-none focus:border-white/30 transition disabled:opacity-40"
+          className="focus-ring bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-12 text-white placeholder:text-white/35 outline-none focus:border-white/40 transition disabled:opacity-40"
         />
 
-        <div>
-          <div className="text-xs text-white/40 mb-2 px-1">Пол</div>
+        <div role="group" aria-label="Пол игрока">
+          <div className="text-xs text-white/40 mb-2 px-1" aria-hidden="true">Пол</div>
           <div className="grid grid-cols-2 gap-2">
             {GENDERS.map(g => (
               <button
                 key={g.value}
                 onClick={() => { haptic(5); setGender(g.value) }}
-                className={`rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                aria-pressed={gender === g.value}
+                className={`focus-ring tap-target rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                   gender === g.value
                     ? `bg-gradient-to-br ${g.gradient} text-white shadow-lg`
                     : 'bg-white/5 text-white/60 hover:bg-white/10'
@@ -246,14 +254,15 @@ export default function SetupScreen() {
           </div>
         </div>
 
-        <div>
-          <div className="text-xs text-white/40 mb-2 px-1">Готов(а) контактировать с</div>
+        <div role="group" aria-label="С кем игрок готов взаимодействовать">
+          <div className="text-xs text-white/40 mb-2 px-1" aria-hidden="true">Готов(а) взаимодействовать с</div>
           <div className="grid grid-cols-3 gap-2">
             {WILLING_OPTIONS.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => { haptic(5); setWillingness(opt.value) }}
-                className={`rounded-xl px-2 py-2.5 text-sm font-medium transition ${
+                aria-pressed={willingness === opt.value}
+                className={`focus-ring tap-target rounded-xl px-2 py-2.5 text-sm font-medium transition ${
                   willingness === opt.value
                     ? `bg-gradient-to-br ${opt.gradient} text-white shadow-lg`
                     : 'bg-white/5 text-white/60 hover:bg-white/10'
@@ -318,7 +327,8 @@ export default function SetupScreen() {
                 </div>
                 <button
                   onClick={e => { e.stopPropagation(); handleRemove(p) }}
-                  className="text-white/30 hover:text-rose-400 px-2 text-xl transition shrink-0"
+                  aria-label={`Удалить игрока ${p.name}`}
+                  className="focus-ring tap-target text-white/45 hover:text-rose-400 px-2 text-xl transition shrink-0"
                 >
                   ×
                 </button>
@@ -353,7 +363,7 @@ export default function SetupScreen() {
             <button
               key={l.value}
               onClick={() => { haptic(8); playSound('click'); setIntimacy(l.value) }}
-              className={`relative overflow-hidden rounded-2xl p-3 text-center transition border ${
+              className={`focus-ring relative overflow-hidden rounded-2xl p-3 min-h-[92px] text-center transition border ${
                 intimacy === l.value
                   ? 'bg-white/15 border-white/30'
                   : 'bg-white/5 border-white/10 hover:bg-white/10'
@@ -388,7 +398,7 @@ export default function SetupScreen() {
       <motion.button
         onClick={handleStart}
         disabled={!canStart}
-        className="liquid-glass px-6 py-5 text-lg font-bold hover:scale-[1.02] active:scale-95 transition shadow-[0_0_60px_-12px_rgba(217,70,239,0.5)] disabled:opacity-40 disabled:shadow-none"
+        className="liquid-glass focus-ring tap-target px-6 py-5 text-lg font-bold surface-hover shadow-[0_0_60px_-12px_rgba(217,70,239,0.45)] disabled:opacity-40 disabled:shadow-none"
         whileTap={canStart ? { scale: 0.97 } : undefined}
       >
         {canStart

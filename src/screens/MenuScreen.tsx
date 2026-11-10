@@ -29,7 +29,7 @@ export default function MenuScreen() {
   const setPhase = useGameStore(s => s.setPhase)
 
   return (
-    <div className="flex flex-col gap-6 pt-12 px-4 pb-6 flex-1 justify-center">
+    <div className="flex flex-col gap-6 pt-[max(2rem,env(safe-area-inset-top))] px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] flex-1 justify-center">
       {/* верхняя мета-строка */}
       <motion.div
         className="flex justify-between items-center px-1 text-xs"
@@ -70,12 +70,12 @@ export default function MenuScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
-        <div className="liquid-glass p-4 text-center flex flex-col gap-1">
+        <div className="liquid-glass p-4 text-center flex flex-col gap-1 min-h-[112px] justify-center">
           <span className="text-2xl mb-1">💭</span>
           <span className="text-sm font-semibold">Правда</span>
           <span className="text-xs text-white/40">Отвечай честно</span>
         </div>
-        <div className="liquid-glass p-4 text-center flex flex-col gap-1">
+        <div className="liquid-glass p-4 text-center flex flex-col gap-1 min-h-[112px] justify-center">
           <span className="text-2xl mb-1">🔥</span>
           <span className="text-sm font-semibold">Действие</span>
           <span className="text-xs text-white/40">Не тормози</span>
@@ -89,7 +89,7 @@ export default function MenuScreen() {
           playSound('success')
           setPhase('setup')
         }}
-        className="liquid-glass px-6 py-5 text-xl font-bold hover:scale-[1.02] active:scale-95 transition shadow-[0_0_60px_-12px_rgba(217,70,239,0.7)]"
+        className="liquid-glass focus-ring tap-target surface-hover px-6 py-5 text-xl font-bold shadow-[0_0_60px_-12px_rgba(217,70,239,0.55)]"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
@@ -112,7 +112,7 @@ export default function MenuScreen() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => playSound('click')}
-            className="flex-1 liquid-glass px-4 py-3 text-sm font-medium hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2"
+            className="flex-1 liquid-glass focus-ring tap-target surface-hover px-4 py-3 text-sm font-medium flex items-center justify-center gap-2"
           >
             {s.icon}
             {s.label}
